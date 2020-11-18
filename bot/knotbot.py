@@ -1,9 +1,8 @@
-from discord.ext import commands
-from discord import Activity, ActivityType
-from .util.database import create_connection
 import discord
-import sys
+from discord import Activity, ActivityType
+from discord.ext import commands
 
+from .util.database import create_connection
 
 intents = discord.Intents.default()
 intents.members = True
@@ -24,12 +23,3 @@ class Knotbot(commands.AutoShardedBot):
         await self.wait_until_ready()
         await self.change_presence(activity=Activity(type=ActivityType.watching, name="kn"))
         print("I'm ready ^^")
-
-
-def main() -> None:
-    bot = Knotbot()
-    bot.run(sys.argv[1])
-
-
-if __name__ == "__main__":
-    main()
