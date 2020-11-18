@@ -1,9 +1,7 @@
+from discord import Message
+from discord.ext.commands import Bot
 from discord.ext.commands import Cog, command
 from discord.ext.commands.context import Context
-from discord.ext.commands import Bot
-from discord import Message
-import os
-from ..util import database
 
 
 class Ranking(Cog):
