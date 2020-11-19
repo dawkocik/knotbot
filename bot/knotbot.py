@@ -7,7 +7,8 @@ from .util.database import create_connection
 intents = discord.Intents.default()
 intents.members = True
 cogs = [
-    "ranking"
+    "ranking",
+    "fun"
 ]
 
 

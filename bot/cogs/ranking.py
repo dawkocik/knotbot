@@ -6,7 +6,7 @@ from discord.ext.commands.context import Context
 
 class Ranking(Cog):
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot):
         self.bot = bot
 
     @command(name="rank")
@@ -18,5 +18,5 @@ class Ranking(Cog):
         pass
 
 
-def setup(bot: Bot):
+def setup(bot: Bot) -> None:
     bot.add_cog(Ranking(bot))
