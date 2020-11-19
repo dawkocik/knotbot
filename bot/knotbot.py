@@ -2,7 +2,6 @@ import discord
 from discord import Activity, ActivityType
 from discord.ext import commands
 
-from .util.database import create_connection
 
 intents = discord.Intents.default()
 intents.members = True
@@ -18,7 +17,6 @@ class Knotbot(commands.AutoShardedBot):
         self.remove_command("help")
         for cog in cogs:
             self.load_extension("bot.cogs." + cog)
-        create_connection("ranking.db")
 
     async def on_ready(self) -> None:
         await self.wait_until_ready()
