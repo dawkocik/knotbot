@@ -1,12 +1,26 @@
 import sqlite3
 
-from bot.knotbot import Knotbot
+from discord.ext.commands import AutoShardedBot
 
 connection: sqlite3.Connection = None
 cursor: sqlite3.Cursor = None
 
 
-def database_connect(bot: Knotbot) -> bool:
+class User:
+    def __init__(self, discord_id: int, elo: int, voice_time: int, messages_sent: int) -> None:
+        self.discord_id = discord_id
+        self.elo = elo
+        self.voice_time = voice_time
+        self.messages_sent = messages_sent
+
+
+class ServerUser(User):
+    def __init__(self, server_id: int, discord_id: int, elo: int, voice_time: int, messages_sent: int) -> None:
+        super().__init__(discord_id, elo, voice_time, messages_sent)
+        self.server_id = server_id
+
+
+def database_connect(bot: AutoShardedBot) -> bool:
     try:
         global connection
         connection = sqlite3.connect("ranking.db")
@@ -16,37 +30,31 @@ def database_connect(bot: Knotbot) -> bool:
     global cursor
     cursor = connection.cursor()
 
-    cursor.execute(
-        '''
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        discord_id INTEGER,
-        elo INTEGER,
-        time_on_voice INTEGER,
-        messages_sent INTEGER
-        )
-        '''
-    )
-    for guild in bot.guilds:
-        cursor.execute(
-            '''
-            CREATE TABLE IF NOT EXISTS server_{0} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ) 
-            '''.format(guild.id)  # todo: users
+            discord_id VARCHAR(18),
+            elo INTEGER,
+            voice_time INTEGER,
+            messages_sent INTEGER
         )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS server_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            server_id VARCHAR(18),
+            user_id VARCHAR(18),
+            elo INTEGER,
+            messages_sent INTEGER,
+            voice_time INTEGER     
+        )
+    ''')
     return True
 
 
-def get_global_elo(user_id: int) -> int:
-    cursor.execute('''
-    SELECT global_elo FROM users WHERE discord_id = {0}
-    '''.format(user_id))
-    return cursor.fetchone()[0]
-
-
-def get_server_elo(user_id: int, server_id: int) -> int:
-    cursor.execute('''
-        SELECT global_elo FROM users WHERE discord_id = {0}
-        '''.format(user_id))
-    return cursor.fetchone()[0]  # todo: yes
+def get_global_user(user_id: int) -> User:
+    cursor.execute(
+        f'SELECT elo, voice_time, messages_sent FROM users WHERE discord_id = {str(user_id)}'
+    )
+    result = cursor.fetchone()
+    return User(user_id, result[0], result[1], result[2])

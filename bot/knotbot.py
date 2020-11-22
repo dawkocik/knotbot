@@ -2,6 +2,7 @@ import discord
 from discord import Activity, ActivityType
 from discord.ext import commands
 
+from bot.util.database import database_connect
 
 intents = discord.Intents.default()
 intents.members = True
@@ -13,7 +14,8 @@ cogs = [
 
 class Knotbot(commands.AutoShardedBot):
     def __init__(self) -> None:
-        super().__init__(command_prefix="kn ", intents=intents, owner_id=239114767690629120, reconnect=True, case_insensitive=False)
+        super().__init__(command_prefix="kn ", intents=intents, owner_id=239114767690629120, reconnect=True,
+                         case_insensitive=False)
         self.remove_command("help")
         for cog in cogs:
             self.load_extension("bot.cogs." + cog)
