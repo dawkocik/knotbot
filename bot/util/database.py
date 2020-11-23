@@ -43,7 +43,7 @@ def database_connect(bot: AutoShardedBot) -> bool:
         CREATE TABLE IF NOT EXISTS server_users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             server_id VARCHAR(18),
-            user_id VARCHAR(18),
+            discord_id VARCHAR(18),
             elo INTEGER,
             messages_sent INTEGER,
             voice_time INTEGER     
@@ -52,9 +52,18 @@ def database_connect(bot: AutoShardedBot) -> bool:
     return True
 
 
-def get_global_user(user_id: int) -> User:
+def get_global_user(discord_id: int) -> User:
     cursor.execute(
-        f'SELECT elo, voice_time, messages_sent FROM users WHERE discord_id = {str(user_id)}'
+        f'SELECT elo, voice_time, messages_sent FROM users WHERE discord_id = {str(discord_id)}'
     )
     result = cursor.fetchone()
-    return User(user_id, result[0], result[1], result[2])
+    return User(discord_id, result[0], result[1], result[2])
+
+
+def get_server_user(server_id: int, discord_id: int) -> ServerUser:
+    cursor.execute(f'''
+        SELECT elo, voice_time, messages_sent FROM server_users 
+        WHERE server_id = {str(server_id)} AND discord_id = {str(discord_id)}
+    ''')
+    result = cursor.fetchone()
+    return ServerUser(server_id, discord_id, result[0], result[1], result[2])
