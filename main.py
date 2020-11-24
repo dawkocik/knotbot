@@ -1,5 +1,6 @@
-from bot.knotbot import Knotbot
 import sys
+
+from bot.knotbot import Knotbot
 
 
 def main() -> None:

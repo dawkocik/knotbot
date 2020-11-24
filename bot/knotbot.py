@@ -2,8 +2,6 @@ import discord
 from discord import Activity, ActivityType
 from discord.ext import commands
 
-from bot.util.database import database_connect
-
 intents = discord.Intents.default()
 intents.members = True
 cogs = [

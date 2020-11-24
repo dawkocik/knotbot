@@ -52,6 +52,10 @@ def database_connect(bot: AutoShardedBot) -> bool:
     return True
 
 
+def loop(ctx, username):
+    print("siema")
+
+
 def get_global_user(discord_id: int) -> User:
     cursor.execute(
         f'SELECT elo, voice_time, messages_sent FROM users WHERE discord_id = {str(discord_id)}'
