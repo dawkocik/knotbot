@@ -6,7 +6,8 @@ intents = discord.Intents.default()
 intents.members = True
 cogs = [
     "ranking",
-    "fun"
+    "fun",
+    "stats"
 ]
 
 
