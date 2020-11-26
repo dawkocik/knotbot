@@ -7,13 +7,15 @@ import matplotlib.pyplot as plt
 from discord.ext import tasks
 from discord.ext.commands import Cog, Bot, command, Context
 
+fig = plt.figure()
+ax = plt.axes()
+
 
 class Message:
     def __init__(self, timestamp: int, user: int, count: int):
         self.timestamp: int = timestamp
         self.user: int = user
         self.count: int = count
-        plt.style.use('seaborn-whitegrid')
 
 
 class ServerMessage(Message):
@@ -31,32 +33,56 @@ class Stats(Cog):
         self.temp_global_messages = dict()
         self.temp_server_messages = dict()
         self.task.start()
+        self.global_messages[239114767690629120] = [
+            Message(1606346340, 239114767690629120, 6),
+            Message(1606347340, 239114767690629120, 2),
+            Message(1606348340, 239114767690629120, 3),
+            Message(1606349340, 239114767690629120, 13),
+            Message(1606350340, 239114767690629120, 1),
+            Message(1606351340, 239114767690629120, 5),
+            Message(1606352340, 239114767690629120, 7),
+        ]
 
     @command(name="stats")
     async def stats(self, ctx: Context) -> None:
         messages = self.global_messages[ctx.author.id]
         #  sorted(messages, key=cmp_to_key(compare_messages))
-        fig = plt.figure()
-        ax = plt.axes()
 
         x = range(0, len(messages))
         y = []
         for message in messages:
             y.append(message.count)
-        ax.set(title=f"{ctx.author.name}'s statistics", xlabel="time", ylabel="messages")
-        a = ax.get_xticks().tolist()
-        a[1] = 'tttt'
-        ax.set_xticklabels(a)
-        ax.plot(x, y)
+        ax.set(xlabel="time", ylabel="messages")
+        labels = []
+        for message in messages:
+            labels.append(datetime.fromtimestamp(message.timestamp).strftime("%H:%M:%S"))
+        ax.set_title(f"{ctx.author.name}'s statistics", color="w")
+        ax.plot(x, y, color="#FF66FF")
+        ax.set_facecolor("#36393F")
+        fig.set_facecolor("#2F3136")
+        ax.xaxis.label.set_color('gray')
+        ax.yaxis.label.set_color('gray')
+        plt.xticks(x, labels)
+        plt.subplots_adjust(bottom=0.15)
+
+        plt.grid(color='#2F3136', linestyle='solid')
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+
+        ax.tick_params(colors='gray', direction='out')
+        for tick in ax.get_xticklabels():
+            tick.set_color('gray')
+        for tick in ax.get_yticklabels():
+            tick.set_color('gray')
 
         await send_plot(ctx)
 
-    @Cog.listener()
-    async def on_message(self, msg: discord.Message):
-        if msg.author.id not in self.temp_global_messages:
-            self.temp_global_messages[msg.author.id] = 1
-        else:
-            self.temp_global_messages[msg.author.id] = self.temp_global_messages[msg.author.id] + 1
+    # @Cog.listener()
+    # async def on_message(self, msg: discord.Message):
+    #     if msg.author.id not in self.temp_global_messages:
+    #         self.temp_global_messages[msg.author.id] = 1
+    #     else:
+    #         self.temp_global_messages[msg.author.id] = self.temp_global_messages[msg.author.id] + 1
 
     @tasks.loop(seconds=10.0)
     async def task(self):
