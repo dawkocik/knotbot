@@ -1,3 +1,5 @@
+import traceback
+
 import discord
 from discord import Activity, ActivityType
 from discord.ext import commands
@@ -29,4 +31,5 @@ class Knotbot(commands.AutoShardedBot):
         if isinstance(exception, CommandOnCooldown):
             await ctx.send(str(exception))
         else:
-            print(exception)
+            tb = traceback.TracebackException.from_exception(exception)
+            print(''.join(tb.format()))

@@ -1,6 +1,5 @@
 import asyncio
 import os
-import time
 from datetime import datetime
 from random import randrange
 
@@ -15,15 +14,15 @@ x = range(0, 24)
 
 
 class Message:
-    def __init__(self, timestamp: int, user: int, count: int):
-        self.timestamp: int = timestamp
+    def __init__(self, hour: int, user: int, count: int):
+        self.hour: int = hour
         self.user: int = user
         self.count: int = count
 
 
 class ServerMessage(Message):
-    def __init__(self, timestamp: int, user: int, server: int):
-        self.timestamp: int = timestamp
+    def __init__(self, hour: int, user: int, server: int):
+        self.hour: int = hour
         self.user: int = user
         self.server: int = server
 
@@ -51,30 +50,28 @@ class Stats(Cog):
         ax.tick_params(colors='gray', direction='out')
 
         self.global_messages[239114767690629120] = [
-            Message(1606348340, 239114767690629120, randrange(800)),
-            Message(1606349340, 239114767690629120, randrange(800)),
-            Message(1606350340, 239114767690629120, randrange(800)),
-            Message(1606351340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606352340, 239114767690629120, randrange(800)),
-            Message(1606346340, 239114767690629120, randrange(800)),
-            Message(1606347340, 239114767690629120, randrange(800)),
-            Message(1606348340, 239114767690629120, randrange(800)),
-            Message(1606349340, 239114767690629120, randrange(800)),
-            Message(1606350340, 239114767690629120, randrange(800)),
-            Message(1606351340, 239114767690629120, randrange(800))
+            Message(0, 239114767690629120, randrange(800)),
+            Message(1, 239114767690629120, randrange(800)),
+            Message(2, 239114767690629120, randrange(800)),
+            Message(5, 239114767690629120, randrange(800)),
+            Message(6, 239114767690629120, randrange(800)),
+            Message(7, 239114767690629120, randrange(800)),
+            Message(8, 239114767690629120, randrange(800)),
+            Message(9, 239114767690629120, randrange(800)),
+            Message(10, 239114767690629120, randrange(800)),
+            Message(11, 239114767690629120, randrange(800)),
+            Message(12, 239114767690629120, randrange(800)),
+            Message(13, 239114767690629120, randrange(800)),
+            Message(14, 239114767690629120, randrange(800)),
+            Message(15, 239114767690629120, randrange(800)),
+            Message(16, 239114767690629120, randrange(800)),
+            Message(17, 239114767690629120, randrange(800)),
+            Message(18, 239114767690629120, randrange(800)),
+            Message(19, 239114767690629120, randrange(800)),
+            Message(20, 239114767690629120, randrange(800)),
+            Message(21, 239114767690629120, randrange(800)),
+            Message(22, 239114767690629120, randrange(800)),
+            Message(23, 239114767690629120, randrange(800))
         ]
 
     @command(name="stats")
@@ -84,17 +81,21 @@ class Stats(Cog):
         messages = self.global_messages[ctx.author.id]
 
         y = [message.count for message in messages]
+        y = []
+        for msg in x:
+            pass
+
         ax.plot(x, y, color="#FF66FF")
         ax.set_title(f"{ctx.author.name}'s statistics", color="w")
 
         await send_plot(ctx)
 
-    # @Cog.listener()
-    # async def on_message(self, msg: discord.Message):
-    #     if msg.author.id not in self.temp_global_messages:
-    #         self.temp_global_messages[msg.author.id] = 1
-    #     else:
-    #         self.temp_global_messages[msg.author.id] = self.temp_global_messages[msg.author.id] + 1
+    @Cog.listener()
+    async def on_message(self, msg: discord.Message):
+        if msg.author.id not in self.temp_global_messages:
+            self.temp_global_messages[msg.author.id] = 1
+        else:
+            self.temp_global_messages[msg.author.id] += 1
 
     @tasks.loop(hours=1)
     async def task(self):
@@ -102,14 +103,14 @@ class Stats(Cog):
         for user, message_count in self.temp_global_messages.items():
             if user not in self.global_messages:
                 self.global_messages[user] = list()
-            self.global_messages[user].append(Message(time.time(), user, message_count))
+            self.global_messages[user].append(Message(datetime.now().hour, user, message_count))
             print(f'{self.bot.get_user(user).name}: {message_count} messages')
         self.temp_global_messages.clear()
         print('-\\/- global -\\/-')
         for user, messages in self.global_messages.items():
             for message in messages:
                 print(
-                    f'{self.bot.get_user(user).name}: {message.count} messages on: {datetime.utcfromtimestamp(message.timestamp).strftime("%Y-%m-%d %H:%M:%S")}'
+                    f'{self.bot.get_user(user).name}: {message.count} messages on: {message.hour}h'
                 )
         print('-/\\- global -/\\-')
 
@@ -118,7 +119,6 @@ class Stats(Cog):
         print("Waiting for the bot to be ready to start the task...")
         await self.bot.wait_until_ready()
         for _ in range(60 * 60):
-            print(datetime.now().minute)
             if datetime.now().minute == 0:
                 return
             await asyncio.sleep(1)
