@@ -1,6 +1,7 @@
 import discord
 from discord import Activity, ActivityType
 from discord.ext import commands
+from discord.ext.commands import CommandOnCooldown, Context, CommandError
 
 intents = discord.Intents.default()
 intents.members = True
@@ -23,3 +24,9 @@ class Knotbot(commands.AutoShardedBot):
         await self.wait_until_ready()
         await self.change_presence(activity=Activity(type=ActivityType.watching, name="kn"))
         print("I'm ready ^^")
+
+    async def on_command_error(self, ctx: Context, exception: CommandError) -> None:
+        if isinstance(exception, CommandOnCooldown):
+            await ctx.send(str(exception))
+        else:
+            print(exception)
