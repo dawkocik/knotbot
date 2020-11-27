@@ -8,7 +8,7 @@ class Util(Cog):
         self.bot = bot
 
     @command(name='avatar')
-    async def avatar(self, ctx: Context):
+    async def avatar(self, ctx: Context, arg1):
         if len(ctx.message.mentions) != 1:
             await ctx.send("{0}, you need to mention 1 person :/".format(ctx.author.mention))
             return
