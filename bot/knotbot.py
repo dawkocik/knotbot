@@ -10,7 +10,8 @@ intents.members = True
 cogs = [
     "ranking",
     "fun",
-    "stats"
+    "stats",
+    "util"
 ]
 
 
@@ -31,5 +32,10 @@ class Knotbot(commands.AutoShardedBot):
         if isinstance(exception, CommandOnCooldown):
             await ctx.send(str(exception))
         else:
+            await ctx.send(f'''
+sorry m8, an error occurred while executing this command:
+`{str(exception)}`
+please report this error to <@239114767690629120>
+            '''.strip())
             tb = traceback.TracebackException.from_exception(exception)
             print(''.join(tb.format()))

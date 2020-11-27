@@ -82,8 +82,11 @@ class Stats(Cog):
 
         y = [message.count for message in messages]
         y = []
-        for msg in x:
-            pass
+        for msg in range(0, len(messages)):
+            if messages[msg].hour == msg:
+                y.append(msg)
+            else:
+                y.append(0)
 
         ax.plot(x, y, color="#FF66FF")
         ax.set_title(f"{ctx.author.name}'s statistics", color="w")
