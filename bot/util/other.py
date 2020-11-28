@@ -4,16 +4,16 @@ from discord.abc import User
 from discord.ext.commands import Context
 
 
-def get_mentions(ctx: Context, count: int = 0) -> Union[List[User], User, None]:
-    if ctx.args is None:
+def get_mentions(ctx: Context, *args, count: int = 0) -> Union[List[User], User, None]:
+    if args is None:
         return None
 
     users = []
 
     if count == 0:
-        if ctx.message.mentions is not None:
+        if len(ctx.message.mentions) > 0:
             return ctx.message.mentions
-        for arg in ctx.args:
+        for arg in args:
             try:
                 user = ctx.bot.get_user(int(arg))
                 if user is not None:
@@ -32,12 +32,12 @@ def get_mentions(ctx: Context, count: int = 0) -> Union[List[User], User, None]:
             if not got_user:
                 return None
     else:
-        if ctx.message.mentions is not None and ctx.message.mentions >= count:
-            return ctx.message.mentions[:range]
+        if len(ctx.message.mentions) >= count:
+            return ctx.message.mentions[:count]
 
-        for arg in count:
+        for arg in range(count + 1):
             try:
-                user = ctx.bot.get_user(int(ctx.args[arg]))
+                user = ctx.bot.get_user(int(args[arg]))
                 if user is not None:
                     users.append(user)
             except ValueError:
@@ -45,7 +45,7 @@ def get_mentions(ctx: Context, count: int = 0) -> Union[List[User], User, None]:
 
             got_user = False
             for member in ctx.guild.members:
-                if member.name.lower().startswith(ctx.args[arg].lower):
+                if member.name.lower().startswith(args[arg].lower):
                     users.append(member)
                     got_user = True
                     break

@@ -1,6 +1,7 @@
 from discord.ext.commands import Cog, Bot, command, Context
 
 from bot.knotbot import Knotbot
+from bot.util.other import get_mentions
 
 
 class Util(Cog):
@@ -9,10 +10,12 @@ class Util(Cog):
 
     @command(name='avatar')
     async def avatar(self, ctx: Context, arg1):
-        if len(ctx.message.mentions) != 1:
-            await ctx.send("{0}, you need to mention 1 person :/".format(ctx.author.mention))
+        mentions = get_mentions(ctx, arg1, 1)
+        print(len(mentions))
+        if mentions is None or len(mentions) is not 1:
+            await ctx.send("wesh mentionne 1 personne")
             return
-        await ctx.send(ctx.message.mentions[0].avatar_url)
+        await ctx.send(mentions[0].avatar_url)
 
 
 def setup(bot: Bot) -> None:
