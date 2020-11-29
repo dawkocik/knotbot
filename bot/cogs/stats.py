@@ -119,10 +119,10 @@ class Stats(Cog):
 
     @task.before_loop
     async def before_task(self):
-        print("Waiting for the bot to be ready to start the task...")
-        await self.bot.wait_until_ready()
+        now = datetime.now()
+        print(f"Waiting for {now.hour + 1}h to start the task...")
         for _ in range(60 * 60):
-            if datetime.now().minute == 0:
+            if now.minute == 0:
                 return
             await asyncio.sleep(1)
 
@@ -142,8 +142,8 @@ async def send_plot(ctx: Context):
     os.remove(path)
 
 
-def compare_messages(x, y):
-    return x.timestamp - y.timestamp
+def compare_messages(msg1, msg2):
+    return msg1.timestamp - msg2.timestamp
 
 
 def setup(bot: Bot) -> None:

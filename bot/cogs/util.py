@@ -10,8 +10,7 @@ class Util(Cog):
 
     @command(name='avatar')
     async def avatar(self, ctx: Context, arg1):
-        mentions = get_mentions(ctx, arg1, 1)
-        print(len(mentions))
+        mentions = get_mentions(ctx, arg1, count=1)
         if mentions is None or len(mentions) is not 1:
             await ctx.send("wesh mentionne 1 personne")
             return
