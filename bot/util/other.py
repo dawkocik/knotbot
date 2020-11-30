@@ -54,4 +54,9 @@ def get_mentions(ctx: Context, *args, count: int = 0) -> Optional[List[User]]:
             if not got_user:
                 return None
 
-    return users if users else None
+    if count == 0 and users:
+        return users
+    elif 0 < count == len(users):
+        return users
+    else:
+        return None

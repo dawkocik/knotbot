@@ -11,8 +11,8 @@ class Util(Cog):
     @command(name='avatar')
     async def avatar(self, ctx: Context, arg1):
         mentions = get_mentions(ctx, arg1, count=1)
-        if mentions is None or len(mentions) is not 1:
-            await ctx.send("wesh mentionne 1 personne")
+        if mentions is None:
+            await ctx.send("You have to mention 1 person, khey")
             return
         await ctx.send(mentions[0].avatar_url)
 
