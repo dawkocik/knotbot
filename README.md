@@ -1,4 +1,4 @@
-# Foobar
+# knotbot
 
 A Discord bot used mostly for stats and an advanced ranking system including elo counting from voice channel activity
 
