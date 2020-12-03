@@ -71,3 +71,10 @@ def get_server_user(server_id: int, discord_id: int) -> ServerUser:
     ''')
     result = cursor.fetchone()
     return ServerUser(server_id, discord_id, result[0], result[1], result[2])
+
+
+def update_global_user(discord_id: int, elo: int, voice_time: int, messages_sent: int) -> None:
+    cursor.execute(f'''
+        INSERT INTO users (discord_id, elo, voice_time, messages_sent)
+        VALUES ({str(discord_id)}, elo, voice_time, messages_sent)
+    ''')
