@@ -5,7 +5,7 @@ A Discord bot used mostly for stats and an advanced ranking system including elo
 ## Usage
 
 ```bash
-python -m main <token>
+python3 -m main <token>
 ```
 
 ## Example stats
