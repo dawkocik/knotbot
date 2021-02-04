@@ -21,7 +21,8 @@ class Message:
 
 
 class ServerMessage(Message):
-    def __init__(self, hour: int, user: int, server: int):
+    def __init__(self, hour: int, user: int, server: int, count: int):
+        super().__init__(hour, user, count)
         self.hour: int = hour
         self.user: int = user
         self.server: int = server

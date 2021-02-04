@@ -17,8 +17,12 @@ cogs = [
 
 class Knotbot(commands.AutoShardedBot):
     def __init__(self) -> None:
-        super().__init__(command_prefix="kn ", intents=intents, owner_id=239114767690629120, reconnect=True,
-                         case_insensitive=False)
+        super().__init__(command_prefix="kn ",
+                         intents=intents,
+                         owner_id=239114767690629120,
+                         reconnect=True,
+                         case_insensitive=False,
+                         guild_subscriptions=True)
         self.remove_command("help")
         for cog in cogs:
             self.load_extension("bot.cogs." + cog)
@@ -33,9 +37,9 @@ class Knotbot(commands.AutoShardedBot):
             await ctx.send(str(exception))
         else:
             await ctx.send(f'''
-sorry m8, an error occurred while executing this command:
-`{str(exception)}`
-please report this error to <@239114767690629120>
+            sorry m8, an error occurred while executing this command:
+            `{str(exception)}`
+            please report this error to <@239114767690629120>
             '''.strip())
             tb = traceback.TracebackException.from_exception(exception)
             print(''.join(tb.format()))
