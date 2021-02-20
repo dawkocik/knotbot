@@ -15,7 +15,6 @@ python3 -m main <token>
 ## Contributing
 Pull requests are welcome.
 
-Please make sure to update tests as appropriate.
 
 ## License
 [The Unlicense](https://unlicense.org/)
