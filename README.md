@@ -8,6 +8,7 @@ A Discord bot used mostly for stats and an advanced ranking system including elo
 python3 -m main <token>
 ```
 
+
 ## Example stats
 ![Example stats](resources/stat-example.png)
 
